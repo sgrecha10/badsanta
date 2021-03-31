@@ -11,7 +11,7 @@ from django.db import models
 class Catalog(models.Model):
     id0 = models.PositiveIntegerField(primary_key=True)
     id1 = models.PositiveIntegerField()
-    type = models.PositiveIntegerField()
+    type = models.PositiveIntegerField(verbose_name='Тип ГОСТа')
     gtype = models.PositiveIntegerField()
     status = models.PositiveIntegerField()
     pages = models.PositiveIntegerField()
@@ -60,11 +60,14 @@ class Catalog1(models.Model):
 
 
 class Catalog2(models.Model):
-    part = models.PositiveIntegerField(primary_key=True)
+    part = models.PositiveIntegerField()
     id0 = models.PositiveIntegerField()
-    pkey = models.PositiveBigIntegerField(unique=True)
+    pkey = models.PositiveBigIntegerField(unique=True, primary_key=True)
     id1 = models.PositiveIntegerField()
-    type = models.PositiveSmallIntegerField()
+    # type = models.PositiveSmallIntegerField()
+    type = models.ForeignKey('mycat.Types2', on_delete=models.CASCADE)
+
+
     status = models.PositiveSmallIntegerField()
     stype = models.PositiveIntegerField()
     numru = models.TextField(blank=True, null=True)
