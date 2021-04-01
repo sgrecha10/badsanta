@@ -6,7 +6,7 @@ services:
     hostname: postgres
     image: postgres
     ports:
-      - '5432:5432'
+      - '5433:5432'
     networks:
       - monolith
     volumes:
@@ -48,7 +48,7 @@ services:
     env_file:
       - ./.env
     ports:
-      - "8000:8000"
+      - "8001:8000"
     depends_on:
       - postgres
       - mysql
