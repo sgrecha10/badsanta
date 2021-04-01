@@ -64,8 +64,8 @@ class Catalog2(models.Model):
     id0 = models.PositiveIntegerField()
     pkey = models.PositiveBigIntegerField(unique=True, primary_key=True)
     id1 = models.PositiveIntegerField()
-    type = models.PositiveSmallIntegerField()
-    # type = models.ForeignKey('mycat.Types2', on_delete=models.CASCADE)
+    # type = models.PositiveSmallIntegerField()
+    type = models.ForeignKey('mycat.Types2', on_delete=models.SET_NULL, null=True)
 
 
     status = models.PositiveSmallIntegerField()
