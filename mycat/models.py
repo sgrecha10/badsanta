@@ -8,6 +8,131 @@
 from django.db import models
 
 
+class Orgrel2(models.Model):
+    part = models.PositiveIntegerField()
+    # part = models.ForeignKey(
+    #     'mycat.Catalog2',
+    #     db_column='part',
+    #     on_delete=models.SET_NULL,
+    #     null=True,
+    #     related_name="orgrel2_part",
+    # )
+    # id0 = models.PositiveIntegerField()
+    id0 = models.ForeignKey(
+        'mycat.Catalog2',
+        db_column='id0',
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    typeorg = models.PositiveIntegerField()
+    # idorg = models.PositiveIntegerField()
+    idorg = models.ForeignKey(
+        'mycat.Org2',
+        db_column='idorg',
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    typerel = models.PositiveIntegerField()
+    date = models.DateField(blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'orgrel2'
+
+
+class Org2(models.Model):
+    typeorg = models.PositiveIntegerField(primary_key=True)
+    # idorg = models.PositiveIntegerField()
+    idorg = models.ManyToManyField(
+        'mycat.Catalog2',
+        through='Orgrel2',
+        through_fields=('idorg', 'id0'),
+    )
+    nameru = models.TextField()
+    nameen = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'org2'
+        # unique_together = (('typeorg', 'idorg'),)
+
+
+class Types2(models.Model):
+    id0 = models.PositiveSmallIntegerField(primary_key=True)
+    nameru = models.CharField(max_length=64)
+    nameen = models.CharField(max_length=64, blank=True, null=True)
+    comment = models.CharField(max_length=255, blank=True, null=True)
+    count = models.PositiveSmallIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'types2'
+        unique_together = (('nameru', 'count', 'id0'),)
+
+    def __str__(self):
+        return self.nameru
+
+
+class Status2(models.Model):
+    id0 = models.PositiveSmallIntegerField(primary_key=True)
+    type = models.PositiveIntegerField()
+    name = models.CharField(max_length=42)
+    typename = models.CharField(max_length=18)
+
+    class Meta:
+        managed = False
+        db_table = 'status2'
+        unique_together = (('id0', 'type', 'name'),)
+
+    def __str__(self):
+        return self.name
+
+
+class Catalog2(models.Model):
+    part = models.PositiveIntegerField()
+    id0 = models.PositiveIntegerField()
+    pkey = models.PositiveBigIntegerField(unique=True, primary_key=True)
+    id1 = models.PositiveIntegerField()
+    type = models.ForeignKey(
+        'mycat.Types2',
+        db_column='type',
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    status = models.ForeignKey(
+        'mycat.Status2',
+        db_column='status',
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    stype = models.PositiveIntegerField()
+    numru = models.TextField(blank=True, null=True)
+    numen = models.TextField(blank=True, null=True)
+    snum = models.PositiveBigIntegerField(blank=True, null=True)
+    nameru = models.TextField(blank=True, null=True)
+    nameen = models.TextField(blank=True, null=True)
+    obl = models.TextField(blank=True, null=True)
+    ogl = models.TextField(blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    pub = models.TextField(blank=True, null=True)
+    html = models.PositiveIntegerField()
+    gif = models.PositiveIntegerField()
+    pages = models.PositiveSmallIntegerField()
+    date0 = models.DateField()
+    date1 = models.DateField(blank=True, null=True)
+    date2 = models.DateField(blank=True, null=True)
+    date3 = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'catalog2'
+        unique_together = (('snum', 'part', 'id0'), ('part', 'id0'), ('type', 'part', 'id0'),)
+
+    def __str__(self):
+        return self.numru
+
+
 class Catalog(models.Model):
     id0 = models.PositiveIntegerField(primary_key=True)
     id1 = models.PositiveIntegerField()
@@ -58,39 +183,6 @@ class Catalog1(models.Model):
         db_table = 'catalog1'
         unique_together = (('snum', 'id0'),)
 
-
-class Catalog2(models.Model):
-    part = models.PositiveIntegerField()
-    id0 = models.PositiveIntegerField()
-    pkey = models.PositiveBigIntegerField(unique=True, primary_key=True)
-    id1 = models.PositiveIntegerField()
-    # type = models.PositiveSmallIntegerField()
-    type = models.ForeignKey('mycat.Types2', on_delete=models.SET_NULL, null=True)
-
-
-    status = models.PositiveSmallIntegerField()
-    stype = models.PositiveIntegerField()
-    numru = models.TextField(blank=True, null=True)
-    numen = models.TextField(blank=True, null=True)
-    snum = models.PositiveBigIntegerField(blank=True, null=True)
-    nameru = models.TextField(blank=True, null=True)
-    nameen = models.TextField(blank=True, null=True)
-    obl = models.TextField(blank=True, null=True)
-    ogl = models.TextField(blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
-    pub = models.TextField(blank=True, null=True)
-    html = models.PositiveIntegerField()
-    gif = models.PositiveIntegerField()
-    pages = models.PositiveSmallIntegerField()
-    date0 = models.DateField()
-    date1 = models.DateField(blank=True, null=True)
-    date2 = models.DateField(blank=True, null=True)
-    date3 = models.DateField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'catalog2'
-        unique_together = (('snum', 'part', 'id0'), ('part', 'id0'), ('type', 'part', 'id0'),)
 
 
 class Catmenu2(models.Model):
@@ -191,30 +283,10 @@ class Docrel2(models.Model):
         db_table = 'docrel2'
 
 
-class Org2(models.Model):
-    typeorg = models.PositiveIntegerField(primary_key=True)
-    idorg = models.PositiveIntegerField()
-    nameru = models.TextField()
-    nameen = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'org2'
-        unique_together = (('typeorg', 'idorg'),)
 
 
-class Orgrel2(models.Model):
-    part = models.PositiveIntegerField()
-    id0 = models.PositiveIntegerField()
-    typeorg = models.PositiveIntegerField()
-    idorg = models.PositiveIntegerField()
-    typerel = models.PositiveIntegerField()
-    date = models.DateField(blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'orgrel2'
+
 
 
 class Reg(models.Model):
@@ -226,16 +298,6 @@ class Reg(models.Model):
         db_table = 'reg'
 
 
-class Status2(models.Model):
-    id0 = models.PositiveSmallIntegerField(primary_key=True)
-    type = models.PositiveIntegerField()
-    name = models.CharField(max_length=42)
-    typename = models.CharField(max_length=18)
-
-    class Meta:
-        managed = False
-        db_table = 'status2'
-        unique_together = (('id0', 'type', 'name'),)
 
 
 class Types(models.Model):
@@ -249,17 +311,7 @@ class Types(models.Model):
         unique_together = (('name', 'id0', 'count'),)
 
 
-class Types2(models.Model):
-    id0 = models.PositiveSmallIntegerField(primary_key=True)
-    nameru = models.CharField(max_length=64)
-    nameen = models.CharField(max_length=64, blank=True, null=True)
-    comment = models.CharField(max_length=255, blank=True, null=True)
-    count = models.PositiveSmallIntegerField()
 
-    class Meta:
-        managed = False
-        db_table = 'types2'
-        unique_together = (('nameru', 'count', 'id0'),)
 
 
 class Windex2(models.Model):
