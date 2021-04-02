@@ -19,8 +19,13 @@
 
 {% block sidebar %}
 <div id="content-related">
+    <div class="inline-group">
+      <h2>Служебные кнопки</h2>
+      <ul class="actionlist">
+        <li><a href="prepare_data">Подготовка данных</a></li>
+      </ul>
+    </div>
     <div class="module" id="recent-actions-module">
-        <h2>Нафигачим сюда кнопок</h2>
         <h2>{% translate 'Recent actions' %}</h2>
         <h3>{% translate 'My actions' %}</h3>
             {% load log %}

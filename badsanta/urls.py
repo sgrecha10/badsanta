@@ -15,9 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import include, url
+from mycat.views import test_button
+
 
 admin.site.enable_nav_sidebar = False
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^admin/prepare_data/$', test_button,
+        name='prepare_data'),
+
 ]
